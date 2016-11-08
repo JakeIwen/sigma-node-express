@@ -13,7 +13,8 @@ app.set('port', process.env.PORT || 3000);
 var songs = [
   {
     artist: "Bruce Springstein",
-    title: "Born in the U.S.A."
+    title: "Born in the U.S.A.",
+    dateAdded: "timeless classic"
   }
 ];
 
@@ -22,10 +23,36 @@ app.post('/songs', function(req, res) {
   // req.body is supplied by bodyParser above
   console.log("REQ body: ", req.body);
   var newSong = req.body;
+  //add create tempory duplicate song array and append form entry
+
   songs.push(newSong);
 
+  var songArr = songs.map(function(item){ return item });
+  var isDuplicate = songArr.some(function(item, i){
+      return songArr.indexOf(item) != i;
+  });
+
+  if(isDuplicate) {
+    console.log('duplicate song');
+    songs.pop(newSong);
+    res.sendStatus(400);
+  } else if(newSong.artist == '' || newSong.title == '') {
+    console.log('cannot leave fields blank');
+    songs.pop(newSong);
+    res.sendStatus(400);
+    // this is inefficient code, but so is using indexOf
+  } else {
+  //  add to original song array
+    var today = new Date();
+    today = today.toString().substring(0, 15);
+    newSong.dateAdded = today;
+    console.log(newSong);
+    console.log('main array ' + songs);
+    res.sendStatus(201);
+  }
+
   // created new resource
-  res.sendStatus(201);
+
 });
 
 app.get('/songs', function(req, res) {
