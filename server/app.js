@@ -14,7 +14,8 @@ var songs = [
   {
     artist: "Bruce Springstein",
     title: "Born in the U.S.A.",
-    dateAdded: "timeless classic"
+    dateAdded: "timeless classic",
+    songStatus: 'ok'
   }
 ];
 
@@ -27,17 +28,22 @@ app.post('/songs', function(req, res) {
 
   songs.push(newSong);
 
-  var songArr = songs.map(function(item){ return item });
-  var isDuplicate = songArr.some(function(item, i){
+  var songArr = songs.map(function(item){
+    return item.title + item.artist;
+  });
+  var isDuplicate = songArr.some(function(item, i, array){
+      console.log('dupe: ' + songArr.indexOf(item) + ' index: ' + i);
       return songArr.indexOf(item) != i;
   });
 
   if(isDuplicate) {
     console.log('duplicate song');
+    songs[songs.length - 2].songStatus = 'duplicate';
     songs.pop(newSong);
     res.sendStatus(400);
   } else if(newSong.artist == '' || newSong.title == '') {
     console.log('cannot leave fields blank');
+    songs[songs.length - 2].songStatus = 'blank';
     songs.pop(newSong);
     res.sendStatus(400);
     // this is inefficient code, but so is using indexOf
@@ -46,6 +52,7 @@ app.post('/songs', function(req, res) {
     var today = new Date();
     today = today.toString().substring(0, 15);
     newSong.dateAdded = today;
+    //songs[songs.length - 1].songStatus = 'ok';
     console.log(newSong);
     console.log('main array ' + songs);
     res.sendStatus(201);

@@ -18,11 +18,15 @@ $(document).ready(function() {
       data: newSong,
       success: function(response) {
         console.log(response);
-        if(response == "Created") {
-          getSongs();
-        } else {
-          alert("Oh no! Your song didn't save correctly.");
-        }
+        getSongs();
+        // if(response == "Created") {
+        //   getSongs();
+        // } else {
+        //   getSongs();
+        // }
+      },
+      error: function() {
+        getSongs();
       }
     })
 
@@ -41,8 +45,13 @@ $(document).ready(function() {
   }
 
   function songsToDom(songs) {
+    console.log(songs[songs.length -1]);
     $("#songContainer").empty();
-
+    if (songs[songs.length -1].songStatus == 'duplicate') {
+      alert('Cannot add duplicate songs');
+    } else if(songs[songs.length -1].songStatus == 'blank') {
+      alert('Cannot leave field blank');
+    }
     for (var i = 0; i < songs.length; i++) {
       $("#songContainer").append('<div class="song"></div>');
       var $el = $("#songContainer").children().last();
