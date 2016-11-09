@@ -29,10 +29,12 @@ app.post('/songs', function(req, res) {
   songs.push(newSong);
 
   var songArr = songs.map(function(item){
+    //returns array of strings of artist and title
     return item.title + item.artist;
   });
-  var isDuplicate = songArr.some(function(item, i, array){
+  var isDuplicate = songArr.some(function(item, i){
       console.log('dupe: ' + songArr.indexOf(item) + ' index: ' + i);
+      //compare above title-artist strings
       return songArr.indexOf(item) != i;
   });
 
@@ -50,11 +52,9 @@ app.post('/songs', function(req, res) {
     res.sendStatus(400);
     // this is inefficient code, but so is using indexOf
   } else {
-  //  add to original song array
     var today = new Date();
-    today = today.toString().substring(0, 15);
     //add date to new song
-    newSong.dateAdded = today;
+    newSong.dateAdded = today.toDateString();
     res.sendStatus(201);
   }
 
