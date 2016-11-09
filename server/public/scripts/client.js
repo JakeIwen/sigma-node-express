@@ -7,8 +7,10 @@ $(document).ready(function() {
 
     $.each($('#postSongForm').serializeArray(), function(i, field) {
       newSong[field.name] = field.value;
-    });
 
+    });
+    //clear input fields
+    $("input[type=text], textarea").val("");
     console.log(newSong);
 
     // send song object to the Server
@@ -19,13 +21,9 @@ $(document).ready(function() {
       success: function(response) {
         console.log(response);
         getSongs();
-        // if(response == "Created") {
-        //   getSongs();
-        // } else {
-        //   getSongs();
-        // }
       },
       error: function() {
+        //always get songs and print to DOM because that function also checks for error reports using data in the song object 
         getSongs();
       }
     })
@@ -47,11 +45,13 @@ $(document).ready(function() {
   function songsToDom(songs) {
     console.log(songs[songs.length -1]);
     $("#songContainer").empty();
+    //error handling
     if (songs[songs.length -1].songStatus == 'duplicate') {
       alert('Cannot add duplicate songs');
     } else if(songs[songs.length -1].songStatus == 'blank') {
       alert('Cannot leave field blank');
     }
+
     for (var i = 0; i < songs.length; i++) {
       $("#songContainer").append('<div class="song"></div>');
       var $el = $("#songContainer").children().last();

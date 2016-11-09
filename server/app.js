@@ -14,7 +14,7 @@ var songs = [
   {
     artist: "Bruce Springstein",
     title: "Born in the U.S.A.",
-    dateAdded: "timeless classic",
+    dateAdded: "Tue Nov 08 2016",
     songStatus: 'ok'
   }
 ];
@@ -38,23 +38,23 @@ app.post('/songs', function(req, res) {
 
   if(isDuplicate) {
     console.log('duplicate song');
-    songs[songs.length - 2].songStatus = 'duplicate';
     songs.pop(newSong);
+    //set flag property for last song array element
+    songs[songs.length - 1].songStatus = 'duplicate';
     res.sendStatus(400);
   } else if(newSong.artist == '' || newSong.title == '') {
     console.log('cannot leave fields blank');
-    songs[songs.length - 2].songStatus = 'blank';
     songs.pop(newSong);
+    //set flag property for last song array element
+    songs[songs.length - 1].songStatus = 'blank';
     res.sendStatus(400);
     // this is inefficient code, but so is using indexOf
   } else {
   //  add to original song array
     var today = new Date();
     today = today.toString().substring(0, 15);
+    //add date to new song
     newSong.dateAdded = today;
-    //songs[songs.length - 1].songStatus = 'ok';
-    console.log(newSong);
-    console.log('main array ' + songs);
     res.sendStatus(201);
   }
 
